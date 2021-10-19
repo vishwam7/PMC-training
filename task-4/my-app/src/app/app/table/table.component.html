@@ -1,0 +1,44 @@
+<div>
+    <ul ngbNav #nav="ngbNav" class="nav-tabs">
+        <li ngbNavItem>
+            <a ngbNavLink>
+                <div ngbDropdown class="d-inline-block">
+                    <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Toggle dropdown</button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                        <button ngbDropdownItem>Action - 1</button>
+                        <button ngbDropdownItem>Another Action</button>
+                        <button ngbDropdownItem>Something else is here</button>
+                    </div>
+                </div>
+            </a>
+        </li>
+    </ul>
+    <div [ngbNavOutlet]="nav"></div>
+</div>
+
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">First</th>
+                <th scope="col">Email</th>
+                <th scope="col">Number</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let employee of employees">
+                <td>{{employee.id}}</td>
+                <td>{{employee.name}}</td>
+                <td>{{employee.email}}</td>
+                <td>{{employee.number}}</td>
+                <td>
+                    <button class="btn btn-outline-primary mb-2 mr-2" (click)="add(employee.id)">Add <fa-icon [icon]="['fas', 'plus']"></fa-icon></button>
+                    <button class="btn btn-outline-primary mb-2 mr-2" (click)="deleteRow(employee.id)">Delete <fa-icon [icon]="['fas', 'trash']"></fa-icon></button>
+                    <button class="btn btn-outline-primary mb-2 mr-2" (click)="update(employee.id)">Edit <fa-icon [icon]="['fas', 'edit']"></fa-icon></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

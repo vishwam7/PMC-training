@@ -1,0 +1,24 @@
+<div class="container-fluid">
+    <form #userEdit="ngForm" (ngSubmit)="onClickSubmit(userEdit.value)">
+        <!-- <form #userEdit="ngForm"> -->
+        <div class="form-group">
+            <label>Name:</label>
+            <input type="text" name="Name" [placeholder]="dname" class="form-control" ngModel>
+        </div>
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="text" name="Email" [placeholder]="demail" class="form-control" ngModel>
+        </div>
+        <div class="form-group">
+            <label>number:</label>
+            <input type="number" name="number" [placeholder]="dnumber" class="form-control" ngModel>
+        </div>
+        <div class="form-group">
+            <label>id:</label>
+            <input type="number" name="id" [placeholder]="did" class="form-control" ngModel>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-danger" value="submit">Edit</button>
+        </div>
+    </form>
+</div>

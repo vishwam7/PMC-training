@@ -1,0 +1,42 @@
+<%- include('include/_header')%>
+    <main id="site-main">
+        <div class="container">
+            <div class="box-nav d-flex justify-between">
+                <a href="/add_user" class="border-shadow">
+                    <span class="text-gradient">New User <i class="fas fa-user"></i></span>
+                </a>
+                <div class="box-nav d-flex justify-between">
+                    <a href="/downloadExcel" class="border-shadow">
+                        <span class="text-gradient">Download Excel <i class="fas fa-file-download"></i></span>
+                    </a>
+                </div>
+                <div class="box-nav d-flex justify-between">
+                    <a href="/downloadPdf" class="border-shadow">
+                        <span class="text-gradient">Download PDF <i class="fas fa-file-download"></i></span>
+                    </a>
+                </div>
+                <div class="box-nav d-flex justify-between ui-widget">
+                    <label for="filtername" class="label text-gradient">Filter by name:</label><input type="text" class="form-control border-shadow text-gradient" id="searchName" name="filtername" placeholder="Enter Name">
+                </div>
+
+                <form action="/" method="POST">
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>@Email</th>
+                                <th>Gender</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%- include('include/_show')%>
+                        </tbody>
+                    </table>
+                </form>
+
+            </div>
+    </main>
+    <%- include('include/_footer')%>

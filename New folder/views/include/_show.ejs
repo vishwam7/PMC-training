@@ -1,0 +1,55 @@
+<% if (data.count<6) {%>
+    <tr>
+        <td>
+            <%=1%>
+        </td>
+        <td>
+            <%=data.users.name%>
+        </td>
+        <td>
+            <%=data.users.email%>
+        </td>
+        <td>
+            <%=data.users.gender%>
+        </td>
+        <td>
+            <%=data.users.status%>
+        </td>
+        <td>
+            <a href="/update_user?id=<%=data.users._id%>" class="btn border-shadow update">
+                <span class="text-gradient"><i class="fas fa-pencil-alt"></i></span>
+            </a>
+            <a class="btn border-shadow delete" data-id=<%=data.users._id%>>
+                    <span class="text-gradient"><i class="fas fa-times"></i></span>
+                </a>
+        </td>
+    </tr>
+    <%} else { %>
+        <% for(var i=0;i<data.users.length;i++){%>
+            <tr>
+                <td>
+                    <%=i+1%>
+                </td>
+                <td id="#" data-toggle="popover" data-id=<%=data.users[i]._id%>>
+                    <%=data.users[i].name%>
+                </td>
+                <td>
+                    <%=data.users[i].email%>
+                </td>
+                <td>
+                    <%=data.users[i].gender%>
+                </td>
+                <td>
+                    <%=data.users[i].status%>
+                </td>
+                <td>
+                    <a href="/update_user?id=<%= data.users[i]._id%>" class="btn border-shadow update">
+                        <span class="text-gradient"><i class="fas fa-pencil-alt"></i></span>
+                    </a>
+                    <a class="btn border-shadow delete" data-id=<%=data.users[i]._id%>>
+                        <span class="text-gradient"><i class="fas fa-times"></i></span>
+                    </a>
+                </td>
+            </tr>
+            <%}%>
+                <% } %>

@@ -1,0 +1,23 @@
+<div class="container-fluid">
+    <form #userAdd="ngForm" (ngSubmit)="onClickSubmit(userAdd.value)">
+        <div class="form-group">
+            <label>Name:</label>
+            <input type="text" name="Name" class="form-control" ngModel>
+        </div>
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="text" name="Email" class="form-control" ngModel>
+        </div>
+        <div class="form-group">
+            <label>number:</label>
+            <input type="number" name="number" class="form-control" ngModel>
+        </div>
+        <div class="form-group">
+            <label>id:</label>
+            <input type="number" name="id" class="form-control" ngModel>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-danger" value="submit">Add</button>
+        </div>
+    </form>
+</div>
