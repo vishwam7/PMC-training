@@ -3,6 +3,7 @@ const ExcelJs = require('exceljs');
 const schedule = require('node-schedule');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
+const pdf = require('html-pdf');
 
 exports.create = (req, res) => {
     if (!req.body) {
@@ -99,6 +100,15 @@ exports.downloadPdf = (req, res, next) => {
     }
     doc.end();
     next();
+}
+
+exports.downloadVoucher = (req, res) => {
+    let ejs = fs.readFileSync('./views/page.html', 'utf-8')
+    let options = { format: 'Letter', width: '356.92291667mm', height: '289.18958333mm' };
+    pdf.create(ejs, options).toFile('./voucher.pdf', function(err, res) {
+        if (err) return console.log(err);
+    });
+    res.redirect('/');
 }
 
 exports.update = (req, res) => {

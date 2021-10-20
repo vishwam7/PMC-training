@@ -15,6 +15,7 @@ route.get('/api/getOne/:id', services.renderOne);
 
 route.get('/downloadExcel', controller.find, controller.downloadExcel);
 route.get('/downloadPdf', controller.find, controller.downloadPdf);
+route.get('/downloadVoucher', controller.downloadVoucher);
 
 route.post('/api/users', controller.create);
 route.get('/api/users', controller.find);
