@@ -4,6 +4,9 @@ const schedule = require('node-schedule');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const pdf = require('html-pdf');
+const { google } = require('googleapis');
+const { GoogleAuth } = require('google-auth-library');
+const async = require('async');
 
 exports.create = (req, res) => {
     if (!req.body) {
@@ -109,6 +112,106 @@ exports.downloadVoucher = (req, res) => {
         if (err) return console.log(err);
     });
     res.redirect('/');
+}
+
+exports.uploadVoucherToDrive = (req, res) => {
+    const auth = new GoogleAuth({
+        keyFile: './test-2.json',
+        scopes: ['https://www.googleapis.com/auth/drive'],
+    });
+    const drive = google.drive({ version: 'v3', auth });
+
+    const todaysDate = new Date()
+    const currentYear = todaysDate.getFullYear()
+        // 2020
+
+    var pageToken = null;
+    // Using the NPM module 'async'
+    async.doWhilst(function(callback) {
+            drive.files.list({
+                q: `mimeType='application/vnd.google-apps.folder' and name contains '${currentYear}'`,
+                fields: 'nextPageToken, files(id, name),files/parents',
+                spaces: 'drive',
+                pageToken: pageToken
+            }, function(err, res) {
+                if (err) {
+                    // Handle error
+                    console.error(err);
+                    callback(err)
+                } else {
+                    console.log(res);
+                    console.log(res.data.files.length);
+                    if (res.data.files.length === 0) {
+                        console.log('Bad luck buddy!\nCreating new folder...');
+                        var fileMetadata = {
+                            'name': `${currentYear}`,
+                            'parents': ['17aQQYPio6XX8rETdkjvlXJBqG9_Z_ZTE'],
+                            'mimeType': 'application/vnd.google-apps.folder'
+                        };
+                        drive.files.create({
+                            resource: fileMetadata,
+                            fields: 'id'
+                        }, function(err, file) {
+                            if (err) {
+                                // Handle error
+                                console.error(err);
+                            } else {
+                                console.log('Created new folder with Id: ', file.data.id);
+                                let parentId = file.data.id;
+                                console.log(parentId);
+                                addFile(parentId);
+                            }
+                        });
+                    } else {
+                        // res.data.files.forEach(function(file) {
+                        //     console.log('Found file: ', file.name, file.id);
+                        //     let parentId = file.id;
+                        //     console.log(parentId);
+                        //     addFile(parentId);
+                        // });
+                        console.log(res.data.files[0].id);
+                        addFile(res.data.files[0].id);
+                        pageToken = res.nextPageToken;
+                    }
+                }
+            });
+        },
+        function() {
+            return !!pageToken;
+        },
+        function(err) {
+            if (err) {
+                // Handle error
+                console.error(err);
+            } else {
+                // All pages fetched
+            }
+        });
+
+    function addFile(givenID) {
+        console.log('From addFile:', givenID)
+        var fileMetadata = {
+            'name': 'voucher.pdf',
+            'parents': [`${givenID}`]
+        };
+        var media = {
+            mimeType: 'application/pdf',
+            body: fs.createReadStream('./voucher.pdf')
+        };
+        drive.files.create({
+            resource: fileMetadata,
+            media: media,
+            fields: 'id'
+        }, function(err, file) {
+            if (err) {
+                // Handle error
+                console.error(err);
+            } else {
+                console.log('File Id: ', file.data.id);
+            }
+        });
+        res.redirect('/');
+    }
 }
 
 exports.update = (req, res) => {
