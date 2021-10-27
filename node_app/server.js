@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const bodyparser = require('body-parser');
 const path = require('path');
+const userRouter = require('./server/routes/userRoutes');
 
 const connectDB = require('./server/database/connection');
 
@@ -25,6 +26,7 @@ app.use('/img', express.static(path.resolve(__dirname, 'assets/img')))
 app.use('/js', express.static(path.resolve(__dirname, 'assets/js')))
 
 app.use('/', require('./server/routes/router'))
+    // app.use('/api/usersToBeAuth', userRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`)

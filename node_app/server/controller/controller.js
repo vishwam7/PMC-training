@@ -288,3 +288,5 @@ exports.scheduler = (req, res, next) => {
     })
     next();
 }
+
+exports.auth = (req, res, next) => {}
