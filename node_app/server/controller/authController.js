@@ -1,3 +1,4 @@
+const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('./../model/userModel');
 const catchAsync = require('./../../assets/js/catchAsync');
@@ -14,7 +15,8 @@ exports.signup = catchAsync(async(req, res, next) => {
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
-        passwordConfirm: req.body.passwordConfirm
+        passwordConfirm: req.body.passwordConfirm,
+        passwordChangedAt: req.body.passwordChangedAt
     });
     const token = signToken(newUser._id);
 
@@ -47,4 +49,39 @@ exports.login = catchAsync(async(req, res, next) => {
         status: 'success',
         token
     });
+});
+
+exports.protect = catchAsync(async(req, res, next) => {
+    //1) Getting the token and check if its exists
+    let token;
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        token = req.headers.authorization.split(' ')[1];
+    }
+    if (!token) {
+        return next(new AppError('You are not logged in, please login to get access', 401));
+    }
+    //2) Verification of token
+    //to make this return promise using promisify
+    let verified
+    try {
+        verified = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
+        console.log(verified)
+    } catch (err) {
+        return next(new AppError('Invalid Token or Expired. Please login again', 401));
+    }
+
+    //3) User still exists or not
+    const freshUser = await User.findById(verified.id);
+    if (!freshUser) {
+        return next(new AppError('User belonging to token does not exists', 401));
+    }
+
+    //4) Check if user changed password after the token was issued
+    if (freshUser.changedPasswordAfter(verified.iat)) {
+        return next(new AppError('Recently changed password! Please login again.', 401));
+    }
+
+    //Grant Access to protected route'
+    req.user = freshUser;
+    next();
 });
